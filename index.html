@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Conferência Bíblica AGE 2026</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- Paleta de Cores --- */
+        :root {
+            --primary-blue: #1565C0;    
+            --secondary-brown: #8D6E63; 
+            --bg-light: #F5F7FA;       
+            --white: #FFFFFF;
+            --text-dark: #37474F;       
+            --text-muted: #78909C;      
+            --whatsapp-green: #25D366;
+            --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+            --shadow-float: 0 8px 30px rgba(0,0,0,0.15);
+        }
+
+        /* --- Reset e Global --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* --- Cabeçalho --- */
+        .hero-header {
+            position: relative;
+            height: 300px;
+            background-color: var(--primary-blue);
+            display: flex;
+            align-items: flex-end;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+            filter: grayscale(20%);
+        }
+        .hero-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(21, 101, 192, 0.9), transparent);
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            width: 100%;
+            color: var(--white);
+        }
+        .hero-title {
+            font-family: 'Roboto Slab', serif;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- Container Principal --- */
+        .main-container {
+            max-width: 800px;
+            margin: -50px auto 0;
+            padding: 0 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* --- Cards FAQ --- */
+        .faq-card {
+            background: var(--white);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+            overflow: hidden;
+            border-left: 5px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .faq-card.active {
+            border-left-color: var(--secondary-brown);
+        }
+        .faq-header {
+            padding: 1.2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--primary-blue);
+        }
+        .faq-icon { transition: transform 0.3s; color: var(--text-muted); }
+        .faq-card.active .faq-icon { transform: rotate(180deg); color: var(--primary-blue); }
+        
+        .faq-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: #fafafa;
+        }
+        .faq-content { padding: 1.2rem; border-top: 1px solid #eee; font-size: 0.95rem; }
+        
+        /* Estilos internos do texto */
+        .highlight-box {
+            background: rgba(141, 110, 99, 0.1);
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 0.5rem 0;
+            border-left: 3px solid var(--secondary-brown);
+        }
+        .highlight-box h4 { color: var(--primary-blue); margin-bottom: 5px; }
+        
+        /* --- CHECKLIST STYLE --- */
+        ul.checklist { 
+            list-style: none; 
+            padding-left: 0; 
+        }
+        ul.checklist li { 
+            margin-bottom: 10px; 
+            position: relative; 
+            padding-left: 35px;
+            display: flex;
+            align-items: center;
+        }
+        ul.checklist li::before {
+            content: 'check_circle';
+            font-family: 'Material Icons Round';
+            position: absolute;
+            left: 0;
+            color: var(--whatsapp-green);
+            font-size: 1.3rem;
+        }
+
+        .official-link {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+            transition: background 0.2s;
+        }
+        .official-link:hover { background-color: #0A367A; }
+
+        /* --- CHAT WIDGET --- */
+        .chat-bubble-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Balão de Texto (Novo) */
+        .chat-text-callout {
+            background-color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            white-space: nowrap;
+            animation: fadeInRight 0.5s ease-out;
+            position: relative;
+        }
+        /* Triângulo do balão */
+        .chat-text-callout::after {
+            content: '';
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-left: 6px solid white;
+        }
+
+        .chat-btn {
+            background-color: var(--whatsapp-green);
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .chat-btn:hover { transform: scale(1.1); }
+        
+        /* Foto do Secretário */
+        .secretary-avatar {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+        }
+
+        /* Janela do Chat */
+        .chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 340px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-float);
+            z-index: 999;
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid #eee;
+        }
+        .chat-window.open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0) scale(1);
+        }
+
+        /* Cabeçalho do Chat */
+        .chat-header-window {
+            background: var(--primary-blue);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+        }
+        .chat-close { background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem; }
+
+        /* Corpo do Chat */
+        .chat-body-window {
+            padding: 15px;
+            background: #fff;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Opções (Perguntas) */
+        .chat-option {
+            background: #f0f2f5;
+            padding: 12px 15px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            transition: background 0.2s;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .chat-option:hover {
+            background: #e3f2fd;
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+        .chat-option i { font-size: 1.1rem; color: var(--secondary-brown); }
+
+        /* Respostas */
+        .chat-answer {
+            display: none;
+            font-size: 0.9rem;
+            color: #333;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-brown);
+            animation: fadeIn 0.3s ease;
+            margin-bottom: 10px;
+        }
+        
+        .btn-back {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--primary-blue);
+            text-decoration: underline;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        /* Botão Final (WhatsApp Real) */
+        .btn-real-whatsapp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            margin-top: 15px;
+            background-color: var(--whatsapp-green);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .btn-real-whatsapp:hover { background-color: #1ebc57; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeInRight { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* Responsivo */
+        @media (max-width: 480px) {
+            .chat-window {
+                width: 90%;
+                right: 5%;
+                bottom: 100px;
+            }
+            .chat-text-callout {
+                display: none; /* Oculta texto em telas muito pequenas para não poluir */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero-header">
+        <img src="https://lh3.googleusercontent.com/d/1bSnOYadeu6Z_0jq8ehqUUvEOqNLjEgjl" alt="Conferência AGE 2026" class="hero-bg">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Central de Apoio</h1>
+            <p>Consagração de Ministros e Obreiros - AGE 2026</p>
+        </div>
+    </header>
+
+    <main class="main-container">
+        
+        <div class="faq-card active">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <span><i class="material-icons-round" style="vertical-align: middle; margin-right: 8px;">event</i> Prazos de Entrega</span>
+                <i class="material-icons-round faq-icon">expand_more</i>
+            </div>
+            <div class="faq-body" style="max-height: 500px;">
+                <div class="faq-content">
+                    <p class="mb-3">O recebimento das documentações começa na Segunda-feira, <strong>23/02/2026</strong>, na Secretaria de Campo (Igreja do Flórida).</p>
+                    <div class="highlight-box">
+                        <h4>Ministros</h4>
+                        <p>Até <strong>18/05/2026</strong>. Consagração em 09 de Julho.</p>
+                    </div>
+                    <div class="highlight-box">
+                        <h4>Obreiros</h4>
+                        <p>Até <strong>27/07/2026</strong>. Consagração em 19 de Setembro.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <span><i class="material-icons-round" style="vertical-align: middle; margin-right: 8px;">attach_money</i> Valores e Taxas</span>
+                <i class="material-icons-round faq-icon">expand_more</i>
+            </div>
+            <div class="faq-body">
+                <div class="faq-content">
+                    <p>Existem dois custos envolvidos no processo:</p>
+                    <ul class="checklist">
+                        <li><strong>Taxa Administrativa:</strong> R$ 20,00 (Referente à consulta SPC/SERASA e trâmites).</li>
+                        <li><strong>Inscrição na Conferência:</strong> O valor varia conforme o lote. A inscrição é obrigatória.</li>
+                    </ul>
+                    <a href="https://www.e-inscricao.com/conadibe/conferencia-biblica-2026" target="_blank" class="official-link" style="margin-top:15px; font-size: 0.9rem;">
+                        Ver valores da Conferência <i class="material-icons-round" style="font-size: 1rem; vertical-align: middle;">open_in_new</i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <span><i class="material-icons-round" style="vertical-align: middle; margin-right: 8px;">folder_special</i> Checklist de Documentos</span>
+                <i class="material-icons-round faq-icon">expand_more</i>
+            </div>
+            <div class="faq-body">
+                <div class="faq-content">
+                    <p style="margin-bottom: 15px;">Documentos obrigatórios para todos os cargos:</p>
+                    <ul class="checklist">
+                        <li>Cópia do RG e CPF</li>
+                        <li>Atestado de Antecedentes Criminais (Atualizado)</li>
+                        <li>Cópia da Certidão de Casamento</li>
+                        <li>Comprovante de Endereço (Atualizado)</li>
+                        <li>Cadastro atualizado com foto no sistema EKLESIA</li>
+                        <li>Comprovante de Inscrição na Conferência 2026</li>
+                        <li>Comprovante da Taxa de R$ 20,00</li>
+                    </ul>
+                    <div style="background: #e3f2fd; padding: 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.9rem;">
+                        <strong>Atenção:</strong> A Ficha de Cadastro deve ser preenchida <strong>digitalmente</strong> presencialmente na Secretaria do campo. Foto digital 3x4 (<strong>fundo branco, Homens de Terno e Gravata/Mulheres Social</strong>) deve ser <em>tirada na secretaria</em>.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <span><i class="material-icons-round" style="vertical-align: middle; margin-right: 8px;">school</i> Exigência Teológica</span>
+                <i class="material-icons-round faq-icon">expand_more</i>
+            </div>
+            <div class="faq-body">
+                <div class="faq-content">
+                    <ul class="checklist">
+                        <li><strong>Ministros:</strong> Curso Médio em Teologia.</li>
+                        <li><strong>Obreiros:</strong> Curso Básico em Teologia.</li>
+                    </ul>
+                    <p class="mt-2 text-sm text-muted">*Caso não tenha concluído, é obrigatório apresentar o Termo de Comprometimento e estar matriculado.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <span><i class="material-icons-round" style="vertical-align: middle; margin-right: 8px;">verified</i> Validação de Curso (Convalidação)</span>
+                <i class="material-icons-round faq-icon">expand_more</i>
+            </div>
+            <div class="faq-body">
+                <div class="faq-content">
+                    <p>Fez curso em outra instituição e quer validar pela <strong>ITADSA</strong>?</p>
+                    <br>
+                    <div class="highlight-box">
+                        <h4>Como funciona o processo:</h4>
+                        <ol style="padding-left: 20px; margin-top: 10px;">
+                            <li>Apresente seu <strong>Certificado</strong> e <strong>Histórico Escolar</strong> (com grade curricular e carga horária).</li>
+                            <li>A ITADSA fará a análise documental.</li>
+                            <li>O candidato realizará uma <strong>prova simples</strong> de nivelamento.</li>
+                            <li>Mediante aprovação e pagamento da taxa de validação, seu curso será reconhecido internamente.</li>
+                        </ol>
+                    </div>
+                    <p class="mt-2 text-sm text-muted">Nota: Aceitamos cursos livres, mesmo sem selo do MEC, desde que possuam grade comprovada.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-card">
+            <div class="faq-header" onclick="toggleAccordion(this)">
+                <span><i class="material-icons-round" style="vertical-align: middle; margin-right: 8px;">handshake</i> Reconhecimento de Cargo</span>
+                <i class="material-icons-round faq-icon">expand_more</i>
+            </div>
+            <div class="faq-body">
+                <div class="faq-content">
+                    <p>Para candidatos vindos de outros ministérios que solicitam reconhecimento:</p>
+                    <ul class="checklist">
+                        <li>Todos os documentos do checklist padrão.</li>
+                        <li><strong>Carta ou Credencial</strong>, que comprove o cargo exercido anteriormente.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="chat-bubble-container">
+        <div class="chat-text-callout">
+            Dúvidas? Fale com Secretário Virtual
+        </div>
+
+        <button onclick="toggleChat()" class="chat-btn" aria-label="Abrir Chat">
+            <img src="https://thumbs.dreamstime.com/b/icona-gestione-tempo-simbolo-programmazione-orario-della-per-il-sito-web-logo-l-app-la-progettazione-dell-interfaccia-utente-171464166.jpg" alt="Secretário" class="secretary-avatar">
+        </button>
+    </div>
+
+    <div id="chatWindow" class="chat-window">
+        <div class="chat-header-window">
+            <span>Dúvidas Frequentes</span>
+            <button onclick="toggleChat()" class="chat-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        
+        <div class="chat-body-window">
+            <p style="color: #666; font-size: 0.9rem; margin-bottom: 15px;">Olá! Como podemos ajudar você hoje?</p>
+            
+            <div id="chatOptions">
+                <div class="chat-option" onclick="showAnswer('prazos')"><i class="material-icons-round">calendar_today</i> Prazos de entrega</div>
+                <div class="chat-option" onclick="showAnswer('valores')"><i class="material-icons-round">attach_money</i> Valores e Taxas</div>
+                <div class="chat-option" onclick="showAnswer('teologia')"><i class="material-icons-round">school</i> Sobre Teologia</div>
+                <div class="chat-option" onclick="showAnswer('convalidacao')"><i class="material-icons-round">verified</i> Curso de outra escola</div>
+                <div class="chat-option" onclick="showAnswer('foto')"><i class="material-icons-round">photo_camera</i> Envio da Foto</div>
+                <div class="chat-option" onclick="showAnswer('reconhecimento')"><i class="material-icons-round">handshake</i> Reconhecimento</div>
+                
+                <button onclick="openWhatsApp()" class="btn-real-whatsapp">
+                    <i class="fa-brands fa-whatsapp"></i> Falar com Secretário Agora
+                </button>
+            </div>
+
+            <div id="answer-prazos" class="chat-answer">
+                <strong>Ministros:</strong> Até 18/05/2026.<br>
+                <strong>Obreiros:</strong> Até 27/07/2026.<br>
+                Entrega na Igreja do Flórida.
+                <button onclick="resetChat()" class="btn-back">Voltar</button>
+            </div>
+
+            <div id="answer-valores" class="chat-answer">
+                São dois valores:<br>
+                1. Taxa administrativa de <strong>R$ 20,00</strong>.<br>
+                2. Inscrição na Conferência (obrigatória).
+                <button onclick="resetChat()" class="btn-back">Voltar</button>
+            </div>
+
+            <div id="answer-teologia" class="chat-answer">
+                Exige-se curso <strong>Médio</strong> para Ministros e <strong>Básico</strong> para Obreiros. Se não tiver, é necessário assinar o Termo de Comprometimento.
+                <button onclick="resetChat()" class="btn-back">Voltar</button>
+            </div>
+
+            <div id="answer-convalidacao" class="chat-answer">
+                Aceitamos cursos de outras escolas!<br>
+                Basta apresentar o <strong>Histórico com notas</strong>. A ITADSA fará uma análise e aplicará uma <strong>prova simples</strong> de validação.
+                <button onclick="resetChat()" class="btn-back">Voltar</button>
+            </div>
+
+            <div id="answer-foto" class="chat-answer">
+                A foto deve ser 3x4, fundo branco, digital.(Trajes Social), devem tiradas na secretaria da Igreja.
+                <button onclick="resetChat()" class="btn-back">Voltar</button>
+            </div>
+
+            <div id="answer-reconhecimento" class="chat-answer">
+                Para quem vem de outro ministério, é obrigatório apresentar documento que comprove o cargo anterior.
+                <button onclick="resetChat()" class="btn-back">Voltar</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        /* --- Lógica do Accordion --- */
+        function toggleAccordion(element) {
+            const card = element.parentElement;
+            const body = card.querySelector('.faq-body');
+            const isActive = card.classList.contains('active');
+
+            document.querySelectorAll('.faq-card').forEach(c => {
+                c.classList.remove('active');
+                c.querySelector('.faq-body').style.maxHeight = null;
+            });
+
+            if (!isActive) {
+                card.classList.add('active');
+                body.style.maxHeight = body.scrollHeight + "px";
+            }
+        }
+
+        /* --- Lógica do Chatbot --- */
+        const chatWindow = document.getElementById('chatWindow');
+        const chatOptions = document.getElementById('chatOptions');
+        const answers = document.querySelectorAll('.chat-answer');
+
+        function toggleChat() {
+            chatWindow.classList.toggle('open');
+        }
+
+        function showAnswer(id) {
+            chatOptions.style.display = 'none';
+            answers.forEach(ans => ans.style.display = 'none');
+            const selected = document.getElementById('answer-' + id);
+            if (selected) selected.style.display = 'block';
+        }
+
+        function resetChat() {
+            answers.forEach(ans => ans.style.display = 'none');
+            chatOptions.style.display = 'block';
+        }
+
+        function openWhatsApp() {
+            // SUBSTITUA O NÚMERO AQUI
+            const phone = "NUMERO_DO_SECRETARIO"; 
+            const text = "Olá Secretário, ainda tenho dúvidas sobre a consagração e preciso de ajuda.";
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        document.addEventListener('click', function(event) {
+            const isClickInside = chatWindow.contains(event.target) || event.target.closest('.chat-bubble-container');
+            if (!isClickInside && chatWindow.classList.contains('open')) {
+                chatWindow.classList.remove('open');
+            }
+        });
+    </script>
+
+</body>
+</html>
